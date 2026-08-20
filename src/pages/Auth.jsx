@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { checkPasswordStrength } from '../lib/passwordStrength'
 import MfaChallenge from './MfaChallenge'
+import PasswordField from '../components/PasswordField'
 
 export default function Auth({ onAuthenticated }) {
   const [isSignUp, setIsSignUp] = useState(false)
@@ -86,8 +87,7 @@ export default function Auth({ onAuthenticated }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type="password"
+        <PasswordField
           placeholder="Senha-mestra"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

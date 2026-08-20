@@ -5,12 +5,12 @@ import { faviconUrl } from '../lib/favicon'
 
 export const TIPOS = {
   senha: { label: 'Senha', placeholder: 'Senha' },
-  outras: { label: 'Outras', placeholder: 'Senha' },
   token: { label: 'Token / Chave', placeholder: 'Valor do token' },
   seed: { label: 'Frase de recuperação', placeholder: 'Cole as palavras separadas por espaço' },
+  outras: { label: 'Outras', placeholder: 'Senha' },
 }
 
-export default function AddEntryForm({ onAdd, savedMessage }) {
+export default function AddEntryForm({ onAdd }) {
   const [open, setOpen] = useState(false)
   const [tipo, setTipo] = useState(null)
   const [site, setSite] = useState('')
@@ -29,15 +29,18 @@ export default function AddEntryForm({ onAdd, savedMessage }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    await onAdd({ tipo, site, login, nome, pwd })
-    reset()
+    const success = await onAdd({ tipo, site, login, nome, pwd })
+    if (success) reset()
   }
 
   if (!open) {
     return (
-      <button type="button" className="add-fab" onClick={() => setOpen(true)}>
-        + Adicionar
-      </button>
+      <div className="section-header">
+        <h2>Minhas senhas</h2>
+        <button type="button" className="add-fab" onClick={() => setOpen(true)} aria-label="Adicionar">
+          +
+        </button>
+      </div>
     )
   }
 
@@ -113,7 +116,6 @@ export default function AddEntryForm({ onAdd, savedMessage }) {
         <button type="button" className="link-button" onClick={reset}>Cancelar</button>
         <button type="submit">Salvar</button>
       </div>
-      {savedMessage && <p className="info">{savedMessage}</p>}
     </form>
   )
 }

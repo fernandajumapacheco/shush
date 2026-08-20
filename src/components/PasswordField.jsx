@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function PasswordField({ value, onChange, placeholder, required }) {
+export default function PasswordField({ value, onChange, placeholder, required, minLength }) {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -11,6 +11,7 @@ export default function PasswordField({ value, onChange, placeholder, required }
         value={value}
         onChange={onChange}
         required={required}
+        minLength={minLength}
       />
       <button
         type="button"

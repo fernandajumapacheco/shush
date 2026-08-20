@@ -117,11 +117,23 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vault-screen header h1 {
+  font-size: 32px;
+  margin: 0;
 }
 
 .header-actions {
   display: flex;
   gap: 8px;
+}
+
+.header-actions button {
+  padding: 6px 12px;
+  font-size: 13px;
 }
 
 .modal-overlay {
@@ -281,12 +293,27 @@ button:hover {
   gap: 8px;
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0 12px;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
 .add-fab {
-  width: 100%;
-  margin: 24px 0;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 500;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .type-menu {

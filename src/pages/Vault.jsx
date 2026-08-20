@@ -75,11 +75,12 @@ export default function Vault({ session, masterPassword }) {
     if (error) {
       console.error(error)
       setSavedMessage('Erro ao salvar. Tente novamente.')
-      return
+      return false
     }
 
     setSavedMessage('Salvo com sucesso!')
     loadEntries()
+    return true
   }
 
   async function handleDelete(id) {
@@ -135,7 +136,9 @@ export default function Vault({ session, masterPassword }) {
         </div>
       )}
 
-      <AddEntryForm onAdd={handleAdd} savedMessage={savedMessage} />
+      {savedMessage && <p className={savedMessage.startsWith('Erro') ? 'error' : 'info'}>{savedMessage}</p>}
+
+      <AddEntryForm onAdd={handleAdd} />
 
       {loading ? (
         <p>Carregando...</p>
