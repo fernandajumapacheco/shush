@@ -1,11 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { encrypt, decrypt } from '../lib/crypto'
+import EntryGroup from '../components/EntryGroup'
+import TokenItem from '../components/TokenItem'
+import SeedItem from '../components/SeedItem'
+
+const OUTRAS = 'Outras'
+
+const TIPOS = {
+  senha: { label: 'Senha', placeholder: 'Senha' },
+  token: { label: 'Token / Chave', placeholder: 'Valor do token' },
+  seed: { label: 'Frase de recuperação', placeholder: 'Cole as palavras separadas por espaço' },
+}
 
 export default function Vault({ session, masterPassword }) {
   const [entries, setEntries] = useState([])
+  const [tipo, setTipo] = useState('senha')
   const [site, setSite] = useState('')
   const [login, setLogin] = useState('')
+  const [nome, setNome] = useState('')
   const [pwd, setPwd] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -29,6 +42,7 @@ export default function Vault({ session, masterPassword }) {
     const decrypted = await Promise.all(
       data.map(async (row) => ({
         id: row.id,
+        tipo: row.tipo,
         site: row.site,
         login: row.login,
         senha: await decrypt(
@@ -48,8 +62,9 @@ export default function Vault({ session, masterPassword }) {
 
     const { error } = await supabase.from('senhas').insert({
       user_id: session.user.id,
-      site,
-      login,
+      tipo,
+      site: tipo === 'senha' ? site.trim() || null : nome.trim(),
+      login: tipo === 'senha' ? login : null,
       senha_cifrada: cipherText,
       salt,
       iv,
@@ -62,6 +77,7 @@ export default function Vault({ session, masterPassword }) {
 
     setSite('')
     setLogin('')
+    setNome('')
     setPwd('')
     loadEntries()
   }
@@ -71,6 +87,27 @@ export default function Vault({ session, masterPassword }) {
     loadEntries()
   }
 
+  const senhas = useMemo(() => entries.filter((e) => e.tipo === 'senha' || !e.tipo), [entries])
+  const tokens = useMemo(() => entries.filter((e) => e.tipo === 'token'), [entries])
+  const seeds = useMemo(() => entries.filter((e) => e.tipo === 'seed'), [entries])
+
+  const groups = useMemo(() => {
+    const map = new Map()
+    for (const entry of senhas) {
+      const key = entry.site?.trim() || OUTRAS
+      if (!map.has(key)) map.set(key, [])
+      map.get(key).push(entry)
+    }
+
+    const outras = map.get(OUTRAS)
+    map.delete(OUTRAS)
+
+    const sorted = [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]))
+    if (outras) sorted.push([OUTRAS, outras])
+
+    return sorted
+  }, [senhas])
+
   return (
     <div className="vault-screen">
       <header>
@@ -79,31 +116,103 @@ export default function Vault({ session, masterPassword }) {
       </header>
 
       <form onSubmit={handleAdd} className="add-form">
-        <input placeholder="Site" value={site} onChange={(e) => setSite(e.target.value)} required />
-        <input placeholder="Usuário/e-mail" value={login} onChange={(e) => setLogin(e.target.value)} required />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={pwd}
-          onChange={(e) => setPwd(e.target.value)}
-          required
-        />
+        <div className="type-toggle">
+          {Object.entries(TIPOS).map(([key, { label }]) => (
+            <button
+              key={key}
+              type="button"
+              className={tipo === key ? 'active' : ''}
+              onClick={() => setTipo(key)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {tipo === 'senha' && (
+          <>
+            <input
+              placeholder="Site (opcional)"
+              value={site}
+              onChange={(e) => setSite(e.target.value)}
+            />
+            <input
+              placeholder="Usuário/e-mail"
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
+              required
+            />
+          </>
+        )}
+
+        {tipo !== 'senha' && (
+          <input
+            placeholder={tipo === 'token' ? 'Nome (ex: Token GitHub)' : 'Nome (ex: Carteira MetaMask)'}
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+          />
+        )}
+
+        {tipo === 'seed' ? (
+          <textarea
+            placeholder={TIPOS[tipo].placeholder}
+            value={pwd}
+            onChange={(e) => setPwd(e.target.value)}
+            required
+            rows={4}
+            className="seed-textarea"
+          />
+        ) : (
+          <input
+            type="password"
+            placeholder={TIPOS[tipo].placeholder}
+            value={pwd}
+            onChange={(e) => setPwd(e.target.value)}
+            required
+          />
+        )}
+
         <button type="submit">Salvar</button>
       </form>
 
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        <ul className="entry-list">
-          {entries.map((entry) => (
-            <li key={entry.id}>
-              <strong>{entry.site}</strong>
-              <span>{entry.login}</span>
-              <span>{entry.senha}</span>
-              <button onClick={() => handleDelete(entry.id)}>Excluir</button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="entry-list">
+            {groups.map(([groupSite, items]) => (
+              <EntryGroup
+                key={groupSite}
+                site={groupSite}
+                items={items}
+                onDelete={handleDelete}
+              />
+            ))}
+          </ul>
+
+          {tokens.length > 0 && (
+            <>
+              <h2 className="section-title">Tokens e chaves</h2>
+              <ul className="entry-list">
+                {tokens.map((entry) => (
+                  <TokenItem key={entry.id} entry={entry} onDelete={handleDelete} />
+                ))}
+              </ul>
+            </>
+          )}
+
+          {seeds.length > 0 && (
+            <>
+              <h2 className="section-title">Frases de recuperação</h2>
+              <ul className="entry-list">
+                {seeds.map((entry) => (
+                  <SeedItem key={entry.id} entry={entry} onDelete={handleDelete} />
+                ))}
+              </ul>
+            </>
+          )}
+        </>
       )}
     </div>
   )
