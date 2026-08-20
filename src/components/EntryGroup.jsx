@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { faviconUrl } from '../lib/favicon'
+import EntryRow from './EntryRow'
 
-export default function EntryGroup({ site, items, onDelete }) {
+export default function EntryGroup({ site, items, onDelete, onUpdate }) {
   const [open, setOpen] = useState(false)
   const icon = site === 'Outras' ? null : faviconUrl(site)
 
@@ -24,11 +25,7 @@ export default function EntryGroup({ site, items, onDelete }) {
       {open && (
         <ul className="entry-sublist">
           {items.map((entry) => (
-            <li key={entry.id}>
-              <span>{entry.login}</span>
-              <span>{entry.senha}</span>
-              <button onClick={() => onDelete(entry.id)}>Excluir</button>
-            </li>
+            <EntryRow key={entry.id} entry={entry} onDelete={onDelete} onUpdate={onUpdate} />
           ))}
         </ul>
       )}

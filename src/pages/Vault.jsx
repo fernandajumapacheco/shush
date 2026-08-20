@@ -6,30 +6,27 @@ import EntryGroup from '../components/EntryGroup'
 import TokenItem from '../components/TokenItem'
 import SeedItem from '../components/SeedItem'
 import MfaSetup from '../components/MfaSetup'
+import AddEntryForm from '../components/AddEntryForm'
 
 const OUTRAS = 'Outras'
 
-const TIPOS = {
-  senha: { label: 'Senha', placeholder: 'Senha' },
-  token: { label: 'Token / Chave', placeholder: 'Valor do token' },
-  seed: { label: 'Frase de recuperação', placeholder: 'Cole as palavras separadas por espaço' },
-}
-
 export default function Vault({ session, masterPassword }) {
   const [entries, setEntries] = useState([])
-  const [tipo, setTipo] = useState('senha')
-  const [site, setSite] = useState('')
-  const [login, setLogin] = useState('')
-  const [nome, setNome] = useState('')
-  const [pwd, setPwd] = useState('')
   const [loading, setLoading] = useState(true)
   const [showMfaSetup, setShowMfaSetup] = useState(false)
+  const [savedMessage, setSavedMessage] = useState('')
 
   useIdleLogout(() => supabase.auth.signOut())
 
   useEffect(() => {
     loadEntries()
   }, [])
+
+  useEffect(() => {
+    if (!savedMessage) return
+    const timer = setTimeout(() => setSavedMessage(''), 3000)
+    return () => clearTimeout(timer)
+  }, [savedMessage])
 
   async function loadEntries() {
     setLoading(true)
@@ -61,15 +58,15 @@ export default function Vault({ session, masterPassword }) {
     setLoading(false)
   }
 
-  async function handleAdd(e) {
-    e.preventDefault()
+  async function handleAdd({ tipo, site, login, nome, pwd }) {
     const { cipherText, salt, iv } = await encrypt(pwd, masterPassword)
+    const tipoSalvo = tipo === 'outras' ? 'senha' : tipo
 
     const { error } = await supabase.from('senhas').insert({
       user_id: session.user.id,
-      tipo,
-      site: tipo === 'senha' ? site.trim() || null : nome.trim(),
-      login: tipo === 'senha' ? login : null,
+      tipo: tipoSalvo,
+      site: tipo === 'senha' ? site.trim() || null : tipo === 'outras' ? null : nome.trim(),
+      login: tipo === 'senha' || tipo === 'outras' ? login : null,
       senha_cifrada: cipherText,
       salt,
       iv,
@@ -77,18 +74,25 @@ export default function Vault({ session, masterPassword }) {
 
     if (error) {
       console.error(error)
+      setSavedMessage('Erro ao salvar. Tente novamente.')
       return
     }
 
-    setSite('')
-    setLogin('')
-    setNome('')
-    setPwd('')
+    setSavedMessage('Salvo com sucesso!')
     loadEntries()
   }
 
   async function handleDelete(id) {
     await supabase.from('senhas').delete().eq('id', id)
+    loadEntries()
+  }
+
+  async function handleUpdate(id, { login, senha }) {
+    const { cipherText, salt, iv } = await encrypt(senha, masterPassword)
+    await supabase
+      .from('senhas')
+      .update({ login, senha_cifrada: cipherText, salt, iv })
+      .eq('id', id)
     loadEntries()
   }
 
@@ -131,66 +135,7 @@ export default function Vault({ session, masterPassword }) {
         </div>
       )}
 
-      <form onSubmit={handleAdd} className="add-form">
-        <div className="type-toggle">
-          {Object.entries(TIPOS).map(([key, { label }]) => (
-            <button
-              key={key}
-              type="button"
-              className={tipo === key ? 'active' : ''}
-              onClick={() => setTipo(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {tipo === 'senha' && (
-          <>
-            <input
-              placeholder="Site (opcional)"
-              value={site}
-              onChange={(e) => setSite(e.target.value)}
-            />
-            <input
-              placeholder="Usuário/e-mail"
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
-              required
-            />
-          </>
-        )}
-
-        {tipo !== 'senha' && (
-          <input
-            placeholder={tipo === 'token' ? 'Nome (ex: Token GitHub)' : 'Nome (ex: Carteira MetaMask)'}
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-        )}
-
-        {tipo === 'seed' ? (
-          <textarea
-            placeholder={TIPOS[tipo].placeholder}
-            value={pwd}
-            onChange={(e) => setPwd(e.target.value)}
-            required
-            rows={4}
-            className="seed-textarea"
-          />
-        ) : (
-          <input
-            type="password"
-            placeholder={TIPOS[tipo].placeholder}
-            value={pwd}
-            onChange={(e) => setPwd(e.target.value)}
-            required
-          />
-        )}
-
-        <button type="submit">Salvar</button>
-      </form>
+      <AddEntryForm onAdd={handleAdd} savedMessage={savedMessage} />
 
       {loading ? (
         <p>Carregando...</p>
@@ -203,6 +148,7 @@ export default function Vault({ session, masterPassword }) {
                 site={groupSite}
                 items={items}
                 onDelete={handleDelete}
+                onUpdate={handleUpdate}
               />
             ))}
           </ul>
