@@ -76,8 +76,12 @@ export default function Auth({ onAuthenticated }) {
 
   return (
     <div className="auth-screen">
-      <h1>Shush <span className="mascot">🐸</span></h1>
-      <p>{isSignUp ? 'Crie sua conta' : 'Entre na sua conta'}</p>
+      <div className="login-brand">
+        <h1 className="shush-logo">
+          Shush<span className="frog">🐸</span>
+        </h1>
+        <p className="login-subtitle">{isSignUp ? 'Crie sua conta' : 'Entre na sua conta'}</p>
+      </div>
 
       <form onSubmit={handleSubmit}>
         <div className="icon-field icon-field-email">

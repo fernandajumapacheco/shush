@@ -123,7 +123,9 @@ export default function Vault({ session, masterPassword }) {
   return (
     <div className="vault-screen">
       <header>
-        <h1>Shush <span className="mascot">🐸</span></h1>
+        <h1 className="shush-logo shush-logo-compact">
+          Shush<span className="frog">🐸</span>
+        </h1>
         <div className="header-actions">
           <button className="btn-security" onClick={() => setShowMfaSetup(true)}>🛡️ Segurança</button>
           <button className="btn-signout" onClick={() => supabase.auth.signOut()}>🚪 Sair</button>
