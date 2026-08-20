@@ -10,6 +10,40 @@
   text-align: center;
 }
 
+.auth-screen h1,
+.vault-screen h1 {
+  font-family: var(--heading);
+  font-weight: 900;
+  font-size: 48px;
+  letter-spacing: -1px;
+  color: #7be89a;
+  -webkit-text-stroke: 3px #14532d;
+  paint-order: stroke fill;
+  text-shadow:
+    0 4px 0 #16803c,
+    0 6px 0 #0f5c2b,
+    0 8px 10px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.vault-screen h1 {
+  font-size: 34px;
+  -webkit-text-stroke: 2px #14532d;
+  text-shadow:
+    0 3px 0 #16803c,
+    0 5px 0 #0f5c2b,
+    0 6px 8px rgba(0, 0, 0, 0.35);
+}
+
+.mascot {
+  -webkit-text-stroke: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 0.7em;
+}
+
 .auth-screen form {
   display: flex;
   flex-direction: column;
@@ -228,18 +262,6 @@ button:hover {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-.vault-screen header h1 {
-  font-size: 32px;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.mascot {
-  font-size: 26px;
 }
 
 .mascot-small {
