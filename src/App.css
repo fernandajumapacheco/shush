@@ -25,6 +25,17 @@
   position: relative;
   display: flex;
   align-items: center;
+  border-radius: 999px;
+}
+
+.icon-field-email {
+  box-shadow: 0 0 0 1px #2fa891, 0 0 12px rgba(47, 168, 145, 0.35);
+  border-radius: 999px;
+}
+
+.icon-field-password {
+  box-shadow: 0 0 0 1px #a855f7, 0 0 12px rgba(168, 85, 247, 0.35);
+  border-radius: 999px;
 }
 
 .field-icon {
@@ -42,11 +53,11 @@
 }
 
 .icon-field-email .field-icon {
-  background: #ffffff;
+  background: #2fa891;
 }
 
 .icon-field-password .field-icon {
-  background: #fbbf24;
+  background: #a855f7;
 }
 
 .icon-field input,
@@ -54,6 +65,18 @@
   padding-left: 46px;
   width: 100%;
   border-radius: 999px;
+  border: none;
+}
+
+.icon-field-password .toggle-visibility {
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 input {
@@ -112,13 +135,31 @@ input {
   border-color: #22c55e;
   color: #14532d;
   font-weight: 600;
+  font-size: 16px;
   border-radius: 999px;
   padding: 12px;
+  position: relative;
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.4);
 }
 
 .auth-screen form button[type="submit"]:hover {
   background: #22c55e;
   color: white;
+}
+
+.mascot-inline {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 button {
