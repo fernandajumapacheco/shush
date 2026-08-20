@@ -19,7 +19,7 @@ export default function PasswordField({ value, onChange, placeholder, required, 
         onClick={() => setVisible(!visible)}
         aria-label={visible ? 'Esconder senha' : 'Mostrar senha'}
       >
-        {visible ? '🙈' : '👁️'}
+        {visible ? '👁️' : '🙈'}
       </button>
     </div>
   )
