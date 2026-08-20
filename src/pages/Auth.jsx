@@ -88,7 +88,7 @@ export default function Auth({ onAuthenticated }) {
           <span className="field-icon">👤</span>
           <input
             type="email"
-            placeholder="E-mail"
+            placeholder="seu@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -97,7 +97,7 @@ export default function Auth({ onAuthenticated }) {
         <div className="icon-field icon-field-password">
           <span className="field-icon">🔒</span>
           <PasswordField
-            placeholder="Senha-mestra"
+            placeholder="••••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

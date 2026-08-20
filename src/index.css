@@ -1,25 +1,55 @@
 :root {
-  --text: #5c6d68;
-  --text-h: #14231f;
-  --bg: #fff;
-  --border: #dbe9e2;
-  --code-bg: #eef7f3;
-  --accent: #2fa891;
-  --accent-bg: rgba(47, 168, 145, 0.12);
-  --accent-border: rgba(47, 168, 145, 0.5);
-  --social-bg: rgba(238, 247, 243, 0.6);
-  --card-bg: #f2f9f5;
-  --card-border: #dcecE4;
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg-deep: #002f2c;
+  --bg: #003f3b;
+  --bg-light: #075952;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mint: #54e5c4;
+  --mint-light: #9dffe4;
+  --mint-dark: #159c85;
+
+  --green: #39b943;
+  --green-light: #8df56c;
+  --green-dark: #08752e;
+
+  --purple: #b56be1;
+  --purple-light: #df9cff;
+  --purple-dark: #603083;
+
+  --yellow: #ffb51b;
+  --yellow-light: #ffe05d;
+
+  --pink: #ff748b;
+  --cream: #fff0c9;
+
+  --white: #ffffff;
+  --text-h: #f8fff9;
+  --text: #c9f0d7;
+  --muted: #37857b;
+
+  --border: rgba(84, 229, 196, 0.25);
+  --code-bg: var(--bg-light);
+  --accent: var(--mint);
+  --accent-bg: rgba(84, 229, 196, 0.14);
+  --accent-border: rgba(84, 229, 196, 0.5);
+  --social-bg: rgba(7, 89, 82, 0.5);
+  --card-bg: var(--bg-light);
+  --card-border: rgba(84, 229, 196, 0.2);
+
+  --shadow-panel: 0 16px 28px rgba(0, 0, 0, 0.42);
+  --shadow-button: 0 14px 24px rgba(0, 0, 0, 0.40);
+  --shadow-inset: inset 0 4px 7px rgba(255, 255, 255, 0.22), inset 0 -8px 12px rgba(0, 0, 0, 0.28);
+  --shadow-glow-mint: 0 0 16px rgba(84, 229, 196, 0.28);
+  --shadow-glow-purple: 0 0 16px rgba(181, 107, 225, 0.32);
+  --shadow:
+    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+  --sans: 'Trebuchet MS', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -32,41 +62,13 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9cb3ac;
-    --text-h: #eafaf3;
-    --bg: #131d1a;
-    --border: #26362f;
-    --code-bg: #1b2723;
-    --accent: #4fd6ba;
-    --accent-bg: rgba(79, 214, 186, 0.15);
-    --accent-border: rgba(79, 214, 186, 0.5);
-    --social-bg: rgba(38, 54, 47, 0.5);
-    --card-bg: #1a2622;
-    --card-border: #2a3b34;
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
 body {
   margin: 0;
-  background-color: #0d2a24;
+  background-color: var(--bg-deep);
   background-image: url("/background-pattern.png");
   background-size: 700px 562px;
   background-attachment: fixed;
   background-repeat: repeat;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #0d2a24;
-  }
 }
 
 #root {
