@@ -15,6 +15,7 @@ export default function Vault({ session, masterPassword }) {
   const [loading, setLoading] = useState(true)
   const [showMfaSetup, setShowMfaSetup] = useState(false)
   const [savedMessage, setSavedMessage] = useState('')
+  const [showAddForm, setShowAddForm] = useState(false)
 
   useIdleLogout(() => supabase.auth.signOut())
 
@@ -79,6 +80,7 @@ export default function Vault({ session, masterPassword }) {
     }
 
     setSavedMessage('Salvo com sucesso!')
+    setShowAddForm(false)
     loadEntries()
     return true
   }
@@ -121,10 +123,10 @@ export default function Vault({ session, masterPassword }) {
   return (
     <div className="vault-screen">
       <header>
-        <h1>Shush</h1>
+        <h1>Shush <span className="mascot">🐸</span></h1>
         <div className="header-actions">
-          <button onClick={() => setShowMfaSetup(true)}>Segurança</button>
-          <button onClick={() => supabase.auth.signOut()}>Sair</button>
+          <button className="btn-security" onClick={() => setShowMfaSetup(true)}>🛡️ Segurança</button>
+          <button className="btn-signout" onClick={() => supabase.auth.signOut()}>🚪 Sair</button>
         </div>
       </header>
 
@@ -138,7 +140,11 @@ export default function Vault({ session, masterPassword }) {
 
       {savedMessage && <p className={savedMessage.startsWith('Erro') ? 'error' : 'info'}>{savedMessage}</p>}
 
-      <AddEntryForm onAdd={handleAdd} />
+      <div className="section-header">
+        <h2>Minhas senhas</h2>
+      </div>
+
+      {showAddForm && <AddEntryForm onAdd={handleAdd} onClose={() => setShowAddForm(false)} />}
 
       {loading ? (
         <p>Carregando...</p>
@@ -176,6 +182,15 @@ export default function Vault({ session, masterPassword }) {
                 ))}
               </ul>
             </>
+          )}
+
+          {!showAddForm && (
+            <div className="footer-actions">
+              <button className="link-button" onClick={loadEntries}>🔄 Atualizar</button>
+              <button className="add-fab" onClick={() => setShowAddForm(true)}>
+                + Cadastrar senha
+              </button>
+            </div>
           )}
         </>
       )}

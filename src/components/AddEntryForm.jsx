@@ -10,8 +10,7 @@ export const TIPOS = {
   outras: { label: 'Outras', placeholder: 'Senha' },
 }
 
-export default function AddEntryForm({ onAdd }) {
-  const [open, setOpen] = useState(false)
+export default function AddEntryForm({ onAdd, onClose }) {
   const [tipo, setTipo] = useState(null)
   const [site, setSite] = useState('')
   const [login, setLogin] = useState('')
@@ -24,24 +23,13 @@ export default function AddEntryForm({ onAdd }) {
     setLogin('')
     setNome('')
     setPwd('')
-    setOpen(false)
+    onClose()
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     const success = await onAdd({ tipo, site, login, nome, pwd })
     if (success) reset()
-  }
-
-  if (!open) {
-    return (
-      <div className="section-header">
-        <h2>Minhas senhas</h2>
-        <button type="button" className="add-fab" onClick={() => setOpen(true)} aria-label="Adicionar">
-          +
-        </button>
-      </div>
-    )
   }
 
   if (!tipo) {
@@ -62,7 +50,7 @@ export default function AddEntryForm({ onAdd }) {
 
   return (
     <form onSubmit={handleSubmit} className="add-form">
-      <p className="hint">{TIPOS[tipo].label}</p>
+      <p className="form-title">⭐ {TIPOS[tipo].label} <span className="mascot-small">🐸</span></p>
 
       {tipo === 'senha' && (
         <div className="site-field">
@@ -114,7 +102,7 @@ export default function AddEntryForm({ onAdd }) {
 
       <div className="add-form-actions">
         <button type="button" className="link-button" onClick={reset}>Cancelar</button>
-        <button type="submit">Salvar</button>
+        <button type="submit">🔑 Salvar</button>
       </div>
     </form>
   )

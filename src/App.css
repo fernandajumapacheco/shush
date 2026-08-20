@@ -124,6 +124,17 @@ button:hover {
 .vault-screen header h1 {
   font-size: 32px;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mascot {
+  font-size: 26px;
+}
+
+.mascot-small {
+  font-size: 15px;
 }
 
 .header-actions {
@@ -134,6 +145,30 @@ button:hover {
 .header-actions button {
   padding: 6px 12px;
   font-size: 13px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.btn-security {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.btn-security:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-signout {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(168, 85, 247, 0.5);
+  color: #a855f7;
+}
+
+.btn-signout:hover {
+  background: #a855f7;
+  color: white;
 }
 
 .modal-overlay {
@@ -304,16 +339,38 @@ button:hover {
   margin: 0;
 }
 
-.add-fab {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border-radius: 50%;
-  font-size: 20px;
-  line-height: 1;
+.footer-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.footer-actions .link-button {
+  margin-top: 0;
+}
+
+.add-fab {
+  background: #4ade80;
+  border-color: #22c55e;
+  color: #14532d;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 10px 18px;
+}
+
+.add-fab:hover {
+  background: #22c55e;
+  color: white;
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
 }
 
 .type-menu {
@@ -330,6 +387,20 @@ button:hover {
 
 .add-form-actions .link-button {
   margin-top: 0;
+}
+
+.add-form-actions button[type="submit"] {
+  background: #4ade80;
+  border-color: #22c55e;
+  color: #14532d;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 10px 20px;
+}
+
+.add-form-actions button[type="submit"]:hover {
+  background: #22c55e;
+  color: white;
 }
 
 .seed-textarea {
