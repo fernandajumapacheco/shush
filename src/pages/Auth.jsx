@@ -1,28 +1,76 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { checkPasswordStrength } from '../lib/passwordStrength'
+import MfaChallenge from './MfaChallenge'
 
 export default function Auth({ onAuthenticated }) {
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [info, setInfo] = useState('')
   const [loading, setLoading] = useState(false)
+  const [mfaFactorId, setMfaFactorId] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setInfo('')
+
+    if (isSignUp) {
+      const strengthError = checkPasswordStrength(password)
+      if (strengthError) {
+        setError(strengthError)
+        return
+      }
+    }
+
     setLoading(true)
 
-    const { error } = isSignUp
-      ? await supabase.auth.signUp({ email, password })
-      : await supabase.auth.signInWithPassword({ email, password })
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setError(error.message)
+      } else {
+        setInfo('Conta criada! Verifique seu e-mail para confirmar antes de entrar.')
+        setIsSignUp(false)
+      }
+      setLoading(false)
+      return
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       setError(error.message)
-    } else {
-      onAuthenticated(password)
+      setLoading(false)
+      return
     }
+
+    const { data: factorsData } = await supabase.auth.mfa.listFactors()
+    const verifiedFactor = factorsData?.totp?.find((f) => f.status === 'verified')
+
+    if (verifiedFactor) {
+      setMfaFactorId(verifiedFactor.id)
+      setLoading(false)
+      return
+    }
+
+    onAuthenticated(password)
     setLoading(false)
+  }
+
+  if (mfaFactorId) {
+    return (
+      <MfaChallenge
+        factorId={mfaFactorId}
+        onVerified={() => onAuthenticated(password)}
+        onCancel={() => {
+          supabase.auth.signOut()
+          setMfaFactorId(null)
+        }}
+      />
+    )
   }
 
   return (
@@ -44,15 +92,26 @@ export default function Auth({ onAuthenticated }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={8}
+          minLength={12}
         />
+        {isSignUp && (
+          <p className="hint">Mínimo 12 caracteres, com maiúsculas, minúsculas e números.</p>
+        )}
         {error && <p className="error">{error}</p>}
+        {info && <p className="info">{info}</p>}
         <button type="submit" disabled={loading}>
           {loading ? 'Aguarde...' : isSignUp ? 'Cadastrar' : 'Entrar'}
         </button>
       </form>
 
-      <button className="link-button" onClick={() => setIsSignUp(!isSignUp)}>
+      <button
+        className="link-button"
+        onClick={() => {
+          setIsSignUp(!isSignUp)
+          setError('')
+          setInfo('')
+        }}
+      >
         {isSignUp ? 'Já tenho conta' : 'Criar conta nova'}
       </button>
     </div>

@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { encrypt, decrypt } from '../lib/crypto'
+import { useIdleLogout } from '../lib/useIdleLogout'
 import EntryGroup from '../components/EntryGroup'
 import TokenItem from '../components/TokenItem'
 import SeedItem from '../components/SeedItem'
+import MfaSetup from '../components/MfaSetup'
 
 const OUTRAS = 'Outras'
 
@@ -21,6 +23,9 @@ export default function Vault({ session, masterPassword }) {
   const [nome, setNome] = useState('')
   const [pwd, setPwd] = useState('')
   const [loading, setLoading] = useState(true)
+  const [showMfaSetup, setShowMfaSetup] = useState(false)
+
+  useIdleLogout(() => supabase.auth.signOut())
 
   useEffect(() => {
     loadEntries()
@@ -112,8 +117,19 @@ export default function Vault({ session, masterPassword }) {
     <div className="vault-screen">
       <header>
         <h1>Shush</h1>
-        <button onClick={() => supabase.auth.signOut()}>Sair</button>
+        <div className="header-actions">
+          <button onClick={() => setShowMfaSetup(true)}>Segurança</button>
+          <button onClick={() => supabase.auth.signOut()}>Sair</button>
+        </div>
       </header>
+
+      {showMfaSetup && (
+        <div className="modal-overlay" onClick={() => setShowMfaSetup(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <MfaSetup onClose={() => setShowMfaSetup(false)} />
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleAdd} className="add-form">
         <div className="type-toggle">
