@@ -81,7 +81,7 @@ export default function Auth({ onAuthenticated }) {
 
       <form onSubmit={handleSubmit}>
         <div className="icon-field icon-field-email">
-          <span className="field-icon">👤</span>
+          <span className="field-icon">✉️</span>
           <input
             type="email"
             placeholder="E-mail"
@@ -91,7 +91,7 @@ export default function Auth({ onAuthenticated }) {
           />
         </div>
         <div className="icon-field icon-field-password">
-          <span className="field-icon">🔒</span>
+          <span className="field-icon">🔑</span>
           <PasswordField
             placeholder="Senha-mestra"
             value={password}

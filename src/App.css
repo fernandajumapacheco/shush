@@ -13,8 +13,12 @@
 .auth-screen form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   margin-top: 24px;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
 }
 
 .icon-field {
@@ -26,28 +30,30 @@
 .field-icon {
   position: absolute;
   left: 6px;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 15px;
   z-index: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .icon-field-email .field-icon {
-  background: #2fa891;
+  background: #ffffff;
 }
 
 .icon-field-password .field-icon {
-  background: #a855f7;
+  background: #fbbf24;
 }
 
 .icon-field input,
 .icon-field .password-field input {
-  padding-left: 42px;
+  padding-left: 46px;
   width: 100%;
+  border-radius: 999px;
 }
 
 input {
