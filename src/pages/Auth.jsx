@@ -76,24 +76,30 @@ export default function Auth({ onAuthenticated }) {
 
   return (
     <div className="auth-screen">
-      <h1>Shush</h1>
+      <h1>Shush <span className="mascot">🐸</span></h1>
       <p>{isSignUp ? 'Crie sua conta' : 'Entre na sua conta'}</p>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <PasswordField
-          placeholder="Senha-mestra"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={12}
-        />
+        <div className="icon-field icon-field-email">
+          <span className="field-icon">👤</span>
+          <input
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="icon-field icon-field-password">
+          <span className="field-icon">🔒</span>
+          <PasswordField
+            placeholder="Senha-mestra"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={12}
+          />
+        </div>
         {isSignUp && (
           <p className="hint">Mínimo 12 caracteres, com maiúsculas, minúsculas e números.</p>
         )}
